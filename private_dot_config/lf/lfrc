@@ -1,0 +1,77 @@
+set cleaner ~/.config/lf/cleaner
+set previewer ~/.config/lf/previewer
+
+set cursorpreviewfmt "\033[7;2m"
+set icons
+set ifs "\n"
+set period 1
+set scrolloff 10
+set shell zsh
+set shellopts '-eu'
+
+cmd on-cd &{{
+    zoxide add "$PWD"
+}}
+
+cmd on-select &{{
+    lf -remote "send $id set statfmt \
+      \"$(eza -ld --color=always --color-scale=size \
+              --color-scale-mode=fixed --icons=always --binary \
+              "$f" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
+}}
+
+cmd open &{{
+    # TODO: use handlr to guess files better
+    case $(file --mime-type -Lb $f) in
+        text/*) lf -remote "send $id \$$EDITOR \$fx";;
+        application/javascript) lf -remote "send $id \$$EDITOR \$fx";;
+        application/json) lf -remote "send $id \$$EDITOR \$fx";;
+        application/octet-stream) lf -remote "send $id \$$EDITOR \$fx";;
+        *) for f in $fx; do handlr-open $f > /dev/null 2> /dev/null & done;;
+    esac
+}}
+
+cmd trash %trash-put -- $fx
+
+cmd z %{{
+    result="$(zoxide query --exclude "$PWD" "$@" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+    lf -remote "send $id cd \"$result\""
+}}
+
+cmd delete ${{
+    set -f
+    printf "$fx\n"
+    printf "delete?[y/n]"
+    read ans
+    [ "$ans" = "y" ] && rm -rf $fx
+}}
+
+cmd fzf_search ${{
+    cmd="rg --column --line-number --no-heading --color=always --smart-case"
+    fzf --ansi --disabled --layout=reverse --header="Search in files" --delimiter=: \
+        --bind="start:reload([ -n {q} ] && $cmd -- {q} || true)" \
+        --bind="change:reload([ -n {q} ] && $cmd -- {q} || true)" \
+        --bind='enter:become(lf -remote "send $id select \"$(printf "%s" {1} | sed '\''s/\\/\\\\/g;s/"/\\"/g'\'')\"")' \
+        # --preview='cat -- {1}' # Use your favorite previewer here (bat, source-highlight, etc.), for example:
+        #--preview-window='+{2}-/2' \
+        #--preview='bat --color=always --highlight-line={2} -- {1}'
+        # Alternatively you can even use the same previewer you've configured for lf
+        --preview='~/.config/lf/cleaner; ~/.config/lf/previewer {1} "$FZF_PREVIEW_COLUMNS" "$FZF_PREVIEW_LINES" "$FZF_PREVIEW_LEFT" "$FZF_PREVIEW_TOP"')"
+}}
+
+cmd zi ${{
+    result="$(zoxide query -i | sed 's/\\/\\\\/g;s/"/\\"/g')"
+    lf -remote "send $id cd \"$result\""
+}}
+
+map ` !true
+map <enter> shell
+map a :push %mkdir<space>
+map <c-d> delete
+map D trash
+map gs :fzf_search
+map <c-j> zi
+map o &mimeopen $f
+map O $mimeopen --ask $f
+map x $$f
+map X !$f

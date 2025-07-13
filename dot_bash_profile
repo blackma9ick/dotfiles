@@ -1,0 +1,46 @@
+#!/usr/bin/bash
+
+# Disable history
+set +o history
+unset HISTFILE
+
+# XDG Base Directory
+export XDG_CACHE_HOME="${HOME}"/.cache
+export XDG_CONFIG_DIRS=/etc/xdg
+export XDG_CONFIG_HOME="${HOME}"/.config
+export XDG_DATA_DIRS=/usr/local/share:/usr/share
+export XDG_DATA_HOME="${HOME}"/.local/share
+export XDG_STATE_HOME="${HOME}"/.local/state
+
+# XDG Policing
+export DXVK_STATE_CACHE_PATH="${XDG_CACHE_HOME}"/dxvk
+export GOCACHE="${XDG_CACHE_HOME}"/go/build
+export GOMODCACHE="${XDG_CACHE_HOME}"/go/mod
+export NUGET_PACKAGES="${XDG_CACHE_HOME}"/NuGetPackages
+export TEXMFVAR="${XDG_CACHE_HOME}"/texlive/texmf-var
+
+export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}"/npm/npmrc
+export TEXMFCONFIG="${XDG_CONFIG_HOME}"/texlive/texmf-config
+export WGETRC="${XDG_CONFIG_HOME}"/wgetrc
+
+# XXX: could stop directory-specific config files from working
+export DXVK_CONFIG_FILE="${XDG_CONFIG_HOME}"/dxvk/dxvk.conf
+export GTK2_RC_FILES="${XDG_CONFIG_HOME}"/gtk-2.0/gtkrc:"${XDG_CONFIG_HOME}"/gtk-2.0/gtkrc.mine
+
+export CARGO_HOME="${XDG_DATA_HOME}"/cargo
+export GOPATH="${XDG_DATA_HOME}"/go
+export GNUPGHOME="${XDG_DATA_HOME}"/gnupg
+export TEXMFHOME="${XDG_DATA_HOME}"/texmf
+
+# Evilsoft
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_NOLOGO=true
+
+# Miscellaneous
+export VISUAL=neovide
+export EDITOR=nvim
+export PATH=$HOME/.local/share/nvim/mason/bin:$HOME/Android/Sdk/platform-tools:$HOME/.local/bin:$PATH
+
+if [ -z "${WAYLAND_DISPLAY}" ] && [ "${XDG_VTNR}" = 1 ]; then
+	exec /usr/lib/plasma-dbus-run-session-if-needed /usr/bin/startplasma-wayland
+fi

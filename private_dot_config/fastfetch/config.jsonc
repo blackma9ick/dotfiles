@@ -1,0 +1,92 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "source": "arch_small"
+  },
+  "modules": [
+    {
+      "type": "title",
+      "key": "buffoon",
+      "format": "{user-name}"
+    },
+    // FIXME: output color no worky
+    // {
+    //     "type": "separator",
+    //     "string": "─",
+    //     "length": 5,
+    //     "outputColor": "dim_"
+    // },
+    {
+      "type": "wm",
+      "key": "framing",
+      "format": "{pretty-name}"
+    },
+    // WARN: cant't remove GTK versions
+    {
+      "type": "theme",
+      "key": "liqueur",
+      "format": "rose-pine-dawn-gtk"
+    },
+    {
+      "type": "icons",
+      "key": "eyesore",
+      // ditto
+      "format": "rose-pine-dawn-icons"
+    },
+    {
+      "type": "cursor",
+      "key": "showing",
+      "format": "{theme}"
+    },
+    {
+      "type": "font",
+      "key": "wording",
+      "format": "{font2}"
+    },
+    // FIXME: looks for malformed process name "tmux: server"
+    // {
+    //     "type": "terminalfont",
+    //     "key": "typography",
+    //     "format": "{/name}{-}{/}{name}{?size} {size}{?}"
+    // },
+    {
+      "type": "cpu",
+      "key": "mulling",
+      "format": "{name} ({cores-online})"
+    },
+    {
+      "type": "gpu",
+      // TODO: choose
+      "key": "lakings",
+      // "key": "valleys/lakings",
+      "format": "{name}"
+    },
+    {
+      "type": "memory",
+      "key": "thought",
+      "format": "{used} / {total}"
+    },
+    "break",
+    {
+      "type": "weather",
+      "key": "raining",
+      "location": "France",
+      "timeout": 200,
+      "outputFormat": "%t+-+%C+(%l)"
+    },
+    {
+      "type": "datetime",
+      "key": "affairs",
+      "format": "{hour-pretty}:{minute-pretty}"
+    },
+    "break",
+    {
+      "type": "os",
+      "key": " ",
+      "format": "{pretty-name} {arch} {#1;96}btw"
+    },
+    "break",
+    "colors",
+    "break"
+  ]
+}

@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+# Disable history
+set +o history
+unset HISTFILE
+
+# Run fish as interactive shell.
+if [[ $(ps --no-header --pid=$PPID --format=comm) != "fish" && -z ${BASH_EXECUTION_STRING} && ${SHLVL} == 1 ]]; then
+	shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=''
+	# Don't double-quote or it will fail.
+	# shellcheck disable=SC2086
+	exec fish $LOGIN_OPTION
+fi

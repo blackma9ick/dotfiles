@@ -1,0 +1,47 @@
+# Based on Google's style guides, with changes.
+# Options that are overriden are at the top of each section.
+
+# XXX: root
+root = true
+
+# DEFAULT
+[*]
+indent_style = tab
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+# In shell, use quoting to explicitly keep whitespace instead.
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = 80
+
+# JSON, JSON WITH COMMENTS
+[*.json,*.jsonc]
+end_of_line = unset
+# Probably unenforceable due to how JSON works and is used by machines.
+max_line_length = unset
+
+# PYTHON
+[*.py]
+indent_size = 4
+
+# TEX
+# Follows The Not So Short Introduction to LaTeX's Guide for Contributors[1],
+# and latexindent.pl's default settings[2]
+#
+# [1]: https://github.com/oetiker/lshort/blob/master/CONTRIBUTING.MD
+# [2]: https://ctan.math.illinois.edu/support/latexindent/documentation/latexindent.pdf
+[*.tex]
+indent_style = tab
+indent_size = tab
+end_of_line = unset
+# Best done by latexindent.pl.
+trim_trailing_whitespace = false
+
+# GIT
+# Annoyingly inserts newlines that most code hosting platforms will display
+# *along* with their own formatting, which tanks readability.
+# I apologise to all.
+[COMMIT_EDITMSG]
+# FIXME: 'unset' does not work here with Neovim! What!!
+max_line_length = 0

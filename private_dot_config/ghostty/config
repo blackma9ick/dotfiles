@@ -1,0 +1,24 @@
+theme = dark:rose-pine-moon,light:rose-pine-dawn
+
+font-family = Lilex Nerd Font Mono
+# My Lilex font package (ttf-lilex-nerd) doesn't seem to have italics?
+font-family-italic = BlexMono Nerd Font Mono
+# Broken number signs
+font-feature = ss04
+font-size = 14
+
+confirm-close-surface = false
+cursor-style = underline
+mouse-hide-while-typing = true
+# required for cursor-style
+#shell-integration-features = no-cursor
+
+keybind = ctrl+-=new_split:down
+keybind = ctrl+equal=new_split:right
+keybind = ctrl+alt+h=goto_split:left
+keybind = ctrl+alt+j=goto_split:down
+keybind = ctrl+alt+k=goto_split:up
+keybind = ctrl+alt+l=goto_split:right
+
+keybind = ctrl+left_bracket=goto_split:previous
+keybind = ctrl+right_bracket=goto_split:next

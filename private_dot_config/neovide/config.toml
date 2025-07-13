@@ -1,0 +1,8 @@
+vsync = false
+
+[font]
+normal = ["Lilex Nerd Font"]
+size = 14
+
+[font.features]
+"Lilex Nerd Font" = [ "+ss04", "+cv08" ]

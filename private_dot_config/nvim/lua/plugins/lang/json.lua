@@ -1,0 +1,36 @@
+return {}
+-- FIXME: not working, possibly due to deprecated `vim.lsp.with`
+-- return {
+--   {
+--     "nvim/nvim-lspconfig",
+--     opts = {
+--       servers = {
+--         jsonls = {
+--           handlers = {
+--             ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+--               -- jsonls doesn't really support json5
+--               -- remove some annoying errors
+--               local opd = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {})
+--               if string.match(result.uri, "%.jsonc$", -6) and result.diagnostics ~= nil then
+--                 local idx = 1
+--                 while idx <= #result.diagnostics do
+--                   if
+--                     -- "Trailing comma"
+--                     result.diagnostics[idx].code == 519
+--                     -- "Comments are not permitted in JSON."
+--                     or result.diagnostics[idx].code == 521
+--                   then
+--                     table.remove(result.diagnostics, idx)
+--                   else
+--                     idx = idx + 1
+--                   end
+--                 end
+--               end
+--               opd(err, result, ctx, config)
+--             end,
+--           },
+--         },
+--       },
+--     },
+--   },
+-- }

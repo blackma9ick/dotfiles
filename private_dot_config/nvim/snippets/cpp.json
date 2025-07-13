@@ -1,0 +1,36 @@
+{
+  "Include guard": {
+    "prefix": "#incguard",
+    "body": [
+      "#ifndef ${1:${TM_FILENAME_BASE/(.*)/${1:/upcase}_H/}}",
+      "#define ${1:${TM_FILENAME_BASE/(.*)/${1:/upcase}_H/}}",
+      "",
+      "$0",
+      "",
+      "#endif // ${1}",
+      "\n"
+    ],
+    "desc": "Classic header guard"
+  },
+  "Include guard with C compatibility": {
+    "prefix": "#incguardc",
+    "body": [
+      "#ifndef ${1:${TM_FILENAME_BASE/(.*)/${1:/upcase}_H/}}",
+      "#define ${1:${TM_FILENAME_BASE/(.*)/${1:/upcase}_H/}}",
+      "",
+      "#ifdef __cplusplus",
+      "extern \"C\" {",
+      "#endif",
+      "",
+      "$0",
+      "",
+      "#ifdef __cplusplus",
+      "}",
+      "#endif",
+      "",
+      "#endif // ${1}",
+      "\n"
+    ],
+    "desc": "Classic header guard with no name mangling (extern C)"
+  }
+}
