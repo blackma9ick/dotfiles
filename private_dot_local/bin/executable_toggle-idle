@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+#
+# Launches or kills hypridle when run, depending on hypridle's state.
+# Works like a toggle.
+
+fork() { (setsid "$@" &) }
+
+declare -r idle=hypridle
+
+if ! pkill "${idle}"; then
+  fork uwsm app -S both -- "${idle}"
+  notify-send --urgency=low --expire-time=1500 'Idle on'
+else
+  notify-send --urgency=low --expire-time=1500 'Idle off'
+fi

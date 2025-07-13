@@ -1,0 +1,36 @@
+#!/usr/bin/bash
+#
+# Automatically kill select apps, services, and optionally relaunch them.
+
+apps=(
+  'udiskie'
+)
+
+apps_norestart=(
+  'keepassxc'
+  'protonmail-bridge'
+)
+
+user_services=(
+  'mpd'
+  'syncthing'
+)
+
+apps_norestart+=("${apps[@]}")
+
+help() {
+  printf 'usage: gamemode-autokill start/stop\n' >&2
+}
+
+if [[ $1 == 'stop' ]]; then
+  killall -q "${apps_norestart[@]}"
+elif [[ $1 == 'start' ]]; then
+  for app in "${apps[@]}"; do
+    /usr/bin/"${app}" &
+  done
+else
+  help
+  exit 1
+fi
+
+systemctl --user "$1" -q --no-ask-password "${user_services[@]}"

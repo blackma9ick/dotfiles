@@ -1,0 +1,68 @@
+#!/usr/bin/bash
+# shellcheck disable=1111
+#
+# Launch a game with Gamescope and predefined options.
+
+declare -a flags
+declare -a embedded_flags
+declare -a nested_flags
+# I would love to have unlimited refresh rate but games will not be able to
+# detect something other than 60 Hz otherwise.
+flags=(
+	# Implies 2560*1440 (16:9).
+	--output-height 1440
+	--nested-refresh 144
+)
+embedded_flags=(--immediate-flips --adaptive-sync --prefer-output 'DP-1')
+nested_flags=(--nested-unfocused-refresh 30 --fullscreen --force-grab-cursor --display-index 'DP-1')
+# Workaround for --force-grab-cursor doing fuck-all.
+# nested_flags+=(--backend sdl)
+
+help() {
+	cat <<'EOT' >&2
+run-game
+
+Launch a game with Gamescope and predefined options.
+
+usage:
+	run-game -n %command%
+	run-game -s
+	run-game -e
+
+	-n: nested mode
+	-s: nested steam mode
+	-e: embedded mode
+EOT
+}
+
+case $1 in
+-e)
+	if [ -n "$DISPLAY" ]; then
+		cat <<-EOT >&2
+			FATAL: Graphical session detected!
+			Probably you meant to use nested (-n) or nested steam (-s) mode?
+		EOT
+		exit 2
+	fi
+
+	flags+=("${embedded_flags[@]}")
+	flags+=(--steam)
+	shift
+	exec /usr/bin/gamemoderun /usr/bin/gamescope "${flags[@]}" -- /usr/bin/steam -tenfoot -steamos
+	;;
+-s)
+	flags+=("${nested_flags[@]}")
+	flags+=(--steam)
+	shift
+	exec /usr/bin/gamemoderun /usr/bin/gamescope "${flags[@]}" -- /usr/bin/steam
+	;;
+-n)
+	flags+=("${nested_flags[@]}")
+	shift
+	exec /usr/bin/env -u LD_PRELOAD /usr/bin/gamemoderun /usr/bin/gamescope "${flags[@]}" -- "$@"
+	;;
+*)
+	help
+	exit 1
+	;;
+esac

@@ -1,0 +1,89 @@
+#!/usr/bin/bash
+#
+# JSON module script that queries usage, memory, and other statistics from an
+# AMDGPU card.
+#
+# Compatible with Waybar.
+#
+# This script is optimized for few instructions during normal execution and thus
+# gets pretty verbose and repetitive.
+
+readonly MODE=$1
+readonly INTERVAL=$2
+
+readonly CARDS=(/sys/class/drm/card*)
+readonly DEVICE="${CARDS[0]}"/device
+
+# Each index corresponds to the first digit of a given usage value, which we can
+# use to quickly approximate the usage level.
+declare -ar CLASSES=(
+  'very-low'
+  'low'
+  'low'
+  'medium'
+  'medium'
+  'high'
+  'high'
+  'very-high'
+  'very-high'
+)
+
+help() {
+  cat <<'EOT' >&2
+usage: amdgpu-query MODE INTERVAL
+	MODE: usage/memory
+	INTERVAL: integer (seconds)
+EOT
+}
+
+class() {
+  # We could invert the condition and prefer less instructions for high usage
+  # scenarios, but I prefer using less energy even when idle.
+  if ((value < 10)); then
+    printf ''
+  else
+    if ((value == 100)); then
+      printf 'very-high'
+    else
+      # The index is the first digit of the value, which we can use to quickly
+      # approximate the usage level.
+      printf '%s' "${CLASSES[${value:0:1}]}"
+    fi
+  fi
+}
+
+loop() {
+  while :; do
+    value=$(<"${DEVICE}"/"${FILE}")
+
+    # TODO: native (in-code) JSON instead of jQuery?
+    jq \
+      --arg text '' \
+      --arg alt '' \
+      --arg tooltip '' \
+      --arg class "$(class)" \
+      --argjson percentage "${value}" \
+      --compact-output \
+      --null-input \
+      --unbuffered \
+      '$ARGS.named'
+
+    sleep "${INTERVAL}"
+  done
+}
+
+case "${MODE}" in
+usage)
+  readonly FILE='gpu_busy_percent'
+  loop
+  ;;
+# TODO: efficient way to retrieve used/total and/or unused/total?
+memory)
+  readonly FILE='mem_busy_percent'
+  loop
+  ;;
+*)
+  help
+  exit 1
+  ;;
+esac
