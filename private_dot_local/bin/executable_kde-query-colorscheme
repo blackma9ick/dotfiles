@@ -6,11 +6,18 @@
 # - 'dark' if a dark theme is suspected (e.g. Breeze Dark)
 # - 'default' if detection fails and no specific color scheme is preferred
 
+use_gsettings() {
+	printf 'INFO: Falling back to gsettings.' >&2
+	gsettings get org.gnome.desktop.interface color-scheme
+	exit
+}
+
 kdeglobals="${XDG_CONFIG_HOME:-$HOME/.config}"/kdeglobals
 
 if [[ ! -f "${kdeglobals}" ]]; then
 	printf 'ERROR: file %s does not exist.\nThis script only works in Plasma 5/6.' \
 		"${kdeglobals}" >&2
+	use_gsettings
 fi
 
 look_and_feel=$(grep 'LookAndFeel' "${kdeglobals}" | cut -d '=' -f 2 | tr '[:upper:]' '[:lower:]')
@@ -23,8 +30,7 @@ case "${look_and_feel}" in
 	echo 'dark'
 	;;
 *)
-	printf '%s' 'INFO: could not recognize color scheme from kdeglobals.' \
-		'\n\tFalling back to gsettings.' >&2
-	gsettings get org.gnome.desktop.interface color-scheme
+	printf 'INFO: could not recognize color scheme from kdeglobals.' >&2
+	use_gsettings
 	;;
 esac
