@@ -16,6 +16,8 @@ set eza_flags '--long --color-scale=size --color-scale-mode=fixed \
                 --no-user'
 
 alias a="$EDITOR"
+alias cz='chezmoi'
+alias czcd='chezmoi-cd'
 alias f='fd'
 alias ff='rg'
 alias g='git'
