@@ -5,7 +5,7 @@ export FZF_COMPLETION_TRIGGER='::'
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow -E.cache -Egames -E.git -E.local/share -E.local/state -E.local/texlive -E.mozilla -E.steam -EAndroid -Enode_modules'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-export GPG_TTY="$TTY"
+export GPG_TTY=$(tty)
 
 # export INFOPATH="$INFOPATH":"$HOME"/.local/texlive/2024/texmf-dist/doc/info
 # export MANPATH="$MANPATH":"$HOME"/.local/texlive/2024/texmf-dist/doc/man
