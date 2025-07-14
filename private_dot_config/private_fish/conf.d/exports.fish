@@ -22,15 +22,8 @@ export ZSTD_NBTHREADS=16
 export WINE_PREFIXES="$HOME/.prefixes"
 
 # theme
-switch (cat "$XDG_CONFIG_HOME"/theme)
-    case rose-pine-main
-        export FZF_DEFAULT_OPTS="
-	--color=fg:#908caa,bg:#191724,hl:#ebbcba
-	--color=fg+:#e0def4,bg+:#26233a,hl+:#ebbcba
-	--color=border:#403d52,header:#31748f,gutter:#191724
-	--color=spinner:#f6c177,info:#9ccfd8
-	--color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
-    case rose-pine-moon
+switch (bash $HOME/.local/bin/kde-query-colorscheme)
+    case dark
         export GLAMOUR_STYLE='Dark'
         export FZF_DEFAULT_OPTS="
 	--color=fg:#908caa,bg:#232136,hl:#ea9a97
@@ -38,7 +31,7 @@ switch (cat "$XDG_CONFIG_HOME"/theme)
 	--color=border:#44415a,header:#3e8fb0,gutter:#232136
 	--color=spinner:#f6c177,info:#9ccfd8
 	--color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
-    case rose-pine-dawn
+    case light
         export GLAMOUR_STYLE='Light'
         export FZF_DEFAULT_OPTS="
 	--color=fg:#797593,bg:#faf4ed,hl:#d7827e
@@ -46,6 +39,4 @@ switch (cat "$XDG_CONFIG_HOME"/theme)
 	--color=border:#dfdad9,header:#286983,gutter:#faf4ed
 	--color=spinner:#ea9d34,info:#56949f
 	--color=pointer:#907aa9,marker:#b4637a,prompt:#797593"
-    case '*'
-        echo "[dotfiles]: Theme file at ~/.config does not exist or has bad value" >&2
 end
